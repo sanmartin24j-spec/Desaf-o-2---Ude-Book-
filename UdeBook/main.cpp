@@ -2,6 +2,10 @@
 #include "usuario.h"
 #include "foto.h"
 #include "mensaje.h"
+#include "solicitudamistad.h"
+#include "album.h"
+#include "nodo.h"
+#include "lista.h"
 using namespace std;
 
 int main()
@@ -41,7 +45,32 @@ m1.marcarLeido();
 
 cout << m1.getLeido() << endl;
 
+SolicitudAmistad s1("Jonathan", "Maria");
 
+cout << s1.getEmisor() << endl;
+cout << s1.getReceptor() << endl;
+cout << s1.getEstado() << endl;
+
+s1.marcarAceptada();
+
+cout << s1.getEstado() << endl;
+
+Album a1("Vacaciones", 5);
+
+cout << a1.getNombre() << endl;
+cout << a1.getCantidadFotos() << endl;
+
+a1.setNombre("Familia");
+
+cout << a1.getNombre() << endl;
+
+Lista<int> numeros;
+
+numeros.agregar(5);
+numeros.agregar(8);
+numeros.agregar(12);
+
+numeros.mostrar();
 
 return 0;
 }
