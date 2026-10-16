@@ -4,8 +4,7 @@
 #include "mensaje.h"
 #include "solicitudamistad.h"
 #include "album.h"
-#include "nodo.h"
-#include "lista.h"
+
 using namespace std;
 
 int main()
@@ -72,5 +71,19 @@ numeros.agregar(12);
 
 numeros.mostrar();
 
+Album a2("Familia", 0);
+
+Foto f1("foto1.jpg", 3);
+Foto f2("foto2.jpg", 7);
+
+a2.agregarFoto(&f1);
+a2.agregarFoto(&f2);
+
+cout << "Cantidad: " << a2.getCantidadFotos() << endl;
+
+cout << "Fotos:" << endl;
+a2.mostrarFotos();
+
+cout << "Fin fotos" << endl;
 return 0;
 }

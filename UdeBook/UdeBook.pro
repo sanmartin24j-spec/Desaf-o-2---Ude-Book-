@@ -6,16 +6,18 @@ CONFIG -= qt
 SOURCES += \
         album.cpp \
         foto.cpp \
+        listafotos.cpp \
         main.cpp \
         mensaje.cpp \
+        nodofoto.cpp \
         solicitudamistad.cpp \
         usuario.cpp
 
 HEADERS += \
     album.h \
     foto.h \
-    lista.h \
+    listafotos.h \
     mensaje.h \
-    nodo.h \
+    nodofoto.h \
     solicitudamistad.h \
     usuario.h

@@ -25,3 +25,14 @@ void Album::setNombre(std::string nombreNuevo)
 {
     nombre = nombreNuevo;
 }
+
+void Album::agregarFoto(Foto* fotoNueva)
+{
+    fotos.agregar(fotoNueva);
+    cantidadFotos++;
+}
+
+void Album::mostrarFotos()
+{
+    fotos.mostrar();
+}
