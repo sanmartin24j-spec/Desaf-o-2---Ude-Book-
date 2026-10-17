@@ -10,6 +10,7 @@ SOURCES += \
         main.cpp \
         mensaje.cpp \
         nodofoto.cpp \
+        sistemaudebook.cpp \
         solicitudamistad.cpp \
         usuario.cpp
 
@@ -19,5 +20,6 @@ HEADERS += \
     listafotos.h \
     mensaje.h \
     nodofoto.h \
+    sistemaudebook.h \
     solicitudamistad.h \
     usuario.h
