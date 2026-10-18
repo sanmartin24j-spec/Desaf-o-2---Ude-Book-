@@ -1,64 +1,15 @@
 #include <iostream>
 #include "usuario.h"
-#include "foto.h"
-#include "mensaje.h"
+//#include "foto.h"
+//#include "mensaje.h"
 #include "solicitudamistad.h"
-#include "album.h"
+//#include "album.h"
 #include "sistemaudebook.h"
 
 using namespace std;
 
 int main()
 {
-
-    Usuario u1;
-
-    u1.setNombreUsuario("Jonathan");
-    u1.setCorreo("jonathan@email.com");
-    u1.setContrasena("desafio2");
-
-    cout << "Usuario: " << u1.getNombreUsuario() << endl;
-    cout << "Correo: " << u1.getCorreo() << endl;
-
-
-    Mensaje m1("Hola", "12/10/2026");
-
-    cout << "Mensaje: " << m1.getTexto() << endl;
-    cout << "Leido antes: " << m1.getLeido() << endl;
-
-    m1.marcarLeido();
-
-    cout << "Leido despues: " << m1.getLeido() << endl;
-
-
-    SolicitudAmistad s1("Jonathan", "Maria");
-
-    cout << "Solicitud: " << s1.getEstado() << endl;
-
-    s1.marcarAceptada();
-
-    cout << "Solicitud despues: " << s1.getEstado() << endl;
-
-
-
-
-    Album album("Familia", 0);
-
-    Foto f1("foto1.jpg", 3);
-    Foto f2("foto2.jpg", 7);
-
-    album.agregarFoto(&f1);
-    album.agregarFoto(&f2);
-
-    cout << endl;
-    cout << "Album: " << album.getNombre() << endl;
-    cout << "Cantidad de fotos: "
-         << album.getCantidadFotos() << endl;
-
-    album.mostrarFotos();
-
-
-
 
     SistemaUdeBook sistema;
 
@@ -80,8 +31,6 @@ int main()
     Usuario c11("Candidato11", "c11@email.com", "11");
     Usuario c12("Candidato12", "c12@email.com", "12");
 
-
-
     sistema.agregarUsuario(&ana);
     sistema.agregarUsuario(&luis);
     sistema.agregarUsuario(&marta);
@@ -100,25 +49,12 @@ int main()
     sistema.agregarUsuario(&c11);
     sistema.agregarUsuario(&c12);
 
-
-    cout << endl;
-    cout << "Usuarios registrados: "
-         << sistema.getCantidadUsuarios() << endl;
-
-
-
-
-    sistema.crearMatrizAmistad(
-        sistema.getCantidadUsuarios()
-        );
-
-
+    sistema.crearMatrizAmistad( sistema.getCantidadUsuarios() );
 
 
     sistema.hacerAmigosPorNombre("Ana", "Luis");
     sistema.hacerAmigosPorNombre("Ana", "Marta");
     sistema.hacerAmigosPorNombre("Ana", "Diego");
-
 
 
     sistema.hacerAmigosPorNombre("Luis", "Candidato1");
@@ -135,8 +71,6 @@ int main()
     sistema.hacerAmigosPorNombre("Luis", "Candidato12");
 
 
-
-
     sistema.hacerAmigosPorNombre("Marta", "Candidato1");
     sistema.hacerAmigosPorNombre("Marta", "Candidato2");
     sistema.hacerAmigosPorNombre("Marta", "Candidato3");
@@ -147,35 +81,114 @@ int main()
     sistema.hacerAmigosPorNombre("Marta", "Candidato8");
 
 
-
-
     sistema.hacerAmigosPorNombre("Diego", "Candidato1");
     sistema.hacerAmigosPorNombre("Diego", "Candidato2");
     sistema.hacerAmigosPorNombre("Diego", "Candidato3");
     sistema.hacerAmigosPorNombre("Diego", "Candidato4");
 
+ //s
+    int indiceAna = sistema.buscarIndiceUsuario("Ana");
 
+    long long iteraciones = 0;
 
-
-    Usuario* encontrado = sistema.buscarUsuario("Ana");
-
-    if (encontrado != nullptr)
-    {
-        cout << endl;
-        cout << "Usuario encontrado: "
-             << encontrado->getNombreUsuario()
-             << endl;
-    }
-
-
-
-    int indiceAna =
-        sistema.buscarIndiceUsuario("Ana");
-
-    cout << endl;
     cout << "12 sugerencias para Ana:" << endl;
 
-    sistema.sugerirAmistades(indiceAna, 12);
+    sistema.sugerirAmistades(indiceAna,12,iteraciones );
+
+    cout << "Iteraciones requeridas: "<< iteraciones<< endl;
+
+ //ms
+
+    long long iteracionesMejor = 0;
+
+    int mejor =sistema.obtenerMejorSugerencia(indiceAna,iteracionesMejor);
+
+    Usuario* mejorUsuario =
+        sistema.getUsuarioPorIndice(mejor);
+
+    if (mejorUsuario != nullptr)
+    {
+        cout << "Mejor sugerencia: "<< mejorUsuario->getNombreUsuario()<< endl;
+        bool enviada = sistema.enviarSolicitud("Ana",mejorUsuario->getNombreUsuario());
+
+        if (enviada)
+        {
+            cout << "Solicitud enviada de Ana a "<< mejorUsuario->getNombreUsuario()<< endl;
+        }
+        else
+        {
+        cout << "No se pudo enviar la solicitud."<< endl;
+        }
+
+
+    }
+
+//1000
+    SistemaUdeBook sistema1000;
+
+    Usuario* usuariosPrueba =
+        new Usuario[1000];
+
+    for (int i = 0; i < 1000; i++)
+    {
+        std::string nombre ="Usuario" + std::to_string(i);
+
+        std::string correo ="usuario" + std::to_string(i)+ "@email.com";
+
+        usuariosPrueba[i].setNombreUsuario(nombre);
+        usuariosPrueba[i].setCorreo(correo);
+        usuariosPrueba[i].setContrasena("1234");
+
+        sistema1000.agregarUsuario( &usuariosPrueba[i]);
+    }
+
+    //pruebasolam
+
+    cout << "Usuarios entorno de prueba: "<< sistema1000.getCantidadUsuarios()<< endl;
+
+    sistema1000.crearMatrizAmistad(sistema1000.getCantidadUsuarios());
+
+    cout << "Memoria estructural SistemaUdeBook: "<< sistema1000.calcularMemoriaEstructural()<< " bytes"<< endl;
+
+    long long memoriaUsuarios =1000LL * sizeof(Usuario);
+
+    cout << "Memoria base de 1000 objetos Usuario: " << memoriaUsuarios<< " bytes"<< endl;
+
+    delete[] usuariosPrueba;
+
+    std::cout << "\n--- PRUEBA DE SOLICITUDES ---\n";
+
+    bool enviada = sistema.enviarSolicitud("Ana", "Candidato1");
+
+    std::cout << "Solicitud enviada: " << enviada << std::endl;
+
+    sistema.mostrarSolicitudesPendientes("Candidato1");
+
+    bool aceptada = sistema.aceptarSolicitud("Candidato1", "Ana");
+
+    std::cout << "Solicitud aceptada: " << aceptada << std::endl;
+
+    int i = sistema.buscarIndiceUsuario("Ana");
+    int j = sistema.buscarIndiceUsuario("Candidato1");
+
+    std::cout << "Ahora son amigos: " << sistema.sonAmigos(i, j) << std::endl;
+
+    std::cout << "Solicitud entre amigos: " << sistema.enviarSolicitud("Ana", "Candidato1") << std::endl;
+
+    // No debe permitirse una solicitud a uno mismo.
+    std::cout << "Solicitud a si mismo: " << sistema.enviarSolicitud("Ana", "Ana")<< std::endl;
+
+    std::cout << "Usuario inexistente: "<< sistema.enviarSolicitud("Ana", "Pedro") << std::endl;
+
+    // Primera solicitud valida.
+    std::cout << "Primera solicitud: "<< sistema.enviarSolicitud("Ana", "Candidato2")<< std::endl;
+
+    // No debe permitirse duplicarla.
+    std::cout << "Solicitud duplicada: "<< sistema.enviarSolicitud("Ana", "Candidato2") << std::endl;
+
+    std::cout << "Solicitud inversa: "<< sistema.enviarSolicitud("Candidato2", "Ana") << std::endl;
+
+
 
 
     return 0;

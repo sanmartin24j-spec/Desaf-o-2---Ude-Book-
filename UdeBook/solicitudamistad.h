@@ -1,5 +1,6 @@
 #ifndef SOLICITUDAMISTAD_H
 #define SOLICITUDAMISTAD_H
+
 #include <string>
 class SolicitudAmistad
 {

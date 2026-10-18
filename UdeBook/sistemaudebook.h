@@ -1,6 +1,7 @@
 #ifndef SISTEMAUDEBOOK_H
 #define SISTEMAUDEBOOK_H
 #include "usuario.h"
+#include "solicitudamistad.h"
 
 class SistemaUdeBook
 {
@@ -10,6 +11,9 @@ private:
     int capacidadUsuarios;
     bool** matrizAmistad;
     int tamanoMatriz;
+    SolicitudAmistad** solicitudes;
+    int cantidadSolicitudes;
+    int capacidadSolicitudes;
 
 public:
     SistemaUdeBook();
@@ -22,8 +26,15 @@ public:
     bool sonAmigos(int i, int j);
     int buscarIndiceUsuario(std::string nombreBuscado);
     void hacerAmigosPorNombre(std::string nombre1, std::string nombre2);
-    void sugerirAmistades(int indiceUsuario, int K);
-    int contarAmigosEnComun(int i, int j);
+    void sugerirAmistades(int indiceUsuario, int K, long long &iteraciones);;
+    int contarAmigosEnComun(int i, int j, long long &iteraciones);
+    long long calcularMemoriaEstructural();
+    int obtenerMejorSugerencia(int indiceUsuario, long long &iteraciones);
+    Usuario* getUsuarioPorIndice(int indice);
+    bool enviarSolicitud(std::string emisor, std::string receptor);
+    void mostrarSolicitudesPendientes(std::string receptor);
+    bool aceptarSolicitud(std::string receptor, std::string emisor);
+
 };
 
 #endif // SISTEMAUDEBOOK_H
