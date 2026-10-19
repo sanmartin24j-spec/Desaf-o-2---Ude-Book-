@@ -8,6 +8,18 @@
 
 using namespace std;
 
+void mostrarMenuAmistades()
+{
+    cout << "\n===== Ude@Book =====" << endl;
+    cout << "1. Enviar solicitud de amistad" << endl;
+    cout << "2. Ver solicitudes pendientes" << endl;
+    cout << "3. Aceptar solicitud" << endl;
+    cout << "4. Ver sugerencias de amistad" << endl;
+    cout << "0. Salir" << endl;
+    cout << "Seleccione una opcion: ";
+}
+
+
 int main()
 {
 
@@ -148,6 +160,63 @@ int main()
 
     sistema1000.crearMatrizAmistad(sistema1000.getCantidadUsuarios());
 
+    for (int i = 1; i <= 3; i++)
+    {
+        sistema1000.hacerAmigos(0, i);
+    }
+
+    for (int i = 4; i <= 15; i++)
+    {
+        sistema1000.hacerAmigos(1, i);
+    }
+
+    for (int i = 4; i <= 11; i++)
+    {
+        sistema1000.hacerAmigos(2, i);
+    }
+
+    for (int i = 4; i <= 7; i++)
+    {
+        sistema1000.hacerAmigos(3, i);
+    }
+
+    cout << "\n--- SUGERENCIAS CON 1000 USUARIOS ---" << endl;
+
+    long long iteraciones1000 = 0;
+
+    int indicePrincipal = sistema1000.buscarIndiceUsuario("Usuario0", iteraciones1000);
+
+    if (indicePrincipal != -1)
+    {
+        sistema1000.sugerirAmistades(indicePrincipal, 12, iteraciones1000 );
+
+        cout << "Iteraciones totales: "<< iteraciones1000 << endl;
+    }
+
+    cout << "\n--- SOLICITUD AL MEJOR CANDIDATO ---" << endl;
+
+    long long iteracionesMejor1000 = 0;
+
+    int mejor1000 = sistema1000.obtenerMejorSugerencia(indicePrincipal, iteracionesMejor1000 );
+
+    Usuario* candidatoMejor =
+        sistema1000.getUsuarioPorIndice(mejor1000);
+
+    if (candidatoMejor != nullptr)
+    {
+        cout << "Mejor candidato: "<< candidatoMejor->getNombreUsuario()<< endl;
+
+        long long iteracionesEnvio1000 = 0;
+
+        bool enviada1000 = sistema1000.enviarSolicitud( "Usuario0", candidatoMejor->getNombreUsuario(), iteracionesEnvio1000);
+
+        cout << "Solicitud enviada: "<< enviada1000 << endl;
+
+        cout << "Iteraciones para encontrar candidato: "<< iteracionesMejor1000 << endl;
+
+        cout << "Iteraciones del envio: " << iteracionesEnvio1000 << endl;
+    }
+
     cout << "Memoria estructural SistemaUdeBook: "<< sistema1000.calcularMemoriaEstructural()<< " bytes"<< endl;
 
     long long memoriaUsuarios =1000LL * sizeof(Usuario);
@@ -175,20 +244,174 @@ int main()
 
     std::cout << "Solicitud entre amigos: " << sistema.enviarSolicitud("Ana", "Candidato1") << std::endl;
 
-    // No debe permitirse una solicitud a uno mismo.
+
     std::cout << "Solicitud a si mismo: " << sistema.enviarSolicitud("Ana", "Ana")<< std::endl;
 
     std::cout << "Usuario inexistente: "<< sistema.enviarSolicitud("Ana", "Pedro") << std::endl;
 
-    // Primera solicitud valida.
+
     std::cout << "Primera solicitud: "<< sistema.enviarSolicitud("Ana", "Candidato2")<< std::endl;
 
-    // No debe permitirse duplicarla.
+
     std::cout << "Solicitud duplicada: "<< sistema.enviarSolicitud("Ana", "Candidato2") << std::endl;
 
     std::cout << "Solicitud inversa: "<< sistema.enviarSolicitud("Candidato2", "Ana") << std::endl;
 
+    cout << "\n--- MEMORIA DEL SISTEMA ---" << endl;
 
+    cout << "Usuarios registrados: "<< sistema.getCantidadUsuarios()<< endl;
+
+    cout << "Memoria estructural contabilizada: " << sistema.calcularMemoriaEstructural()<< " bytes" << endl;
+
+    long long iteracionesSolicitud = 0;
+
+    bool resultado = sistema.enviarSolicitud("Marta","Candidato12",iteracionesSolicitud);
+
+    cout << "\n--- MEDICION DE SOLICITUD ---" << endl;
+
+    cout << "Solicitud enviada: " << resultado << endl;
+
+    cout << "Iteraciones realizadas: " << iteracionesSolicitud << endl;
+
+    long long iteracionesAceptar = 0;
+
+    bool aceptadaMedicion = sistema.aceptarSolicitud("Candidato12","Marta",iteracionesAceptar);
+
+    cout << "Solicitud aceptada: "<< aceptadaMedicion << endl;
+
+    cout << "Iteraciones al aceptar: "<< iteracionesAceptar << endl;
+
+    int indiceMarta = sistema.buscarIndiceUsuario("Marta");
+    int indiceCandidato12 = sistema.buscarIndiceUsuario("Candidato12");
+
+    cout << "Ahora son amigos: "<< sistema.sonAmigos(indiceMarta, indiceCandidato12)<< endl;
+
+
+    int opcion;
+
+    do
+    {
+        mostrarMenuAmistades();
+
+        cin >> opcion;
+
+        switch (opcion)
+        {
+        case 1:
+        {
+            string emisor;
+            string receptor;
+            long long iteraciones = 0;
+
+            cout << "Nombre del usuario que envia: ";
+            cin >> emisor;
+
+            cout << "Nombre del usuario que recibe: ";
+            cin >> receptor;
+
+            bool enviada = sistema.enviarSolicitud(emisor, receptor, iteraciones);
+
+            if (enviada)
+            {
+                cout << "Solicitud enviada correctamente." << endl;
+            }
+            else
+            {
+                cout << "No se pudo enviar la solicitud." << endl;
+            }
+
+            cout << "Iteraciones realizadas: "<< iteraciones << endl;
+
+            break;
+        }
+        case 2:
+        {
+            string receptor;
+
+            cout << "Ingrese el nombre del usuario: ";
+            cin >> receptor;
+
+            cout << "\n--- SOLICITUDES PENDIENTES ---" << endl;
+
+            sistema.mostrarSolicitudesPendientes(receptor);
+
+            break;
+        }
+        case 3:
+        {
+            string receptor;
+            string emisor;
+            long long iteraciones = 0;
+
+            cout << "Nombre del usuario que acepta: ";
+            cin >> receptor;
+
+            cout << "Nombre del usuario que envio la solicitud: ";
+            cin >> emisor;
+
+            bool aceptada = sistema.aceptarSolicitud(receptor, emisor, iteraciones);
+
+            if (aceptada)
+            {
+                cout << "Solicitud aceptada correctamente." << endl;
+            }
+            else
+            {
+                cout << "No se pudo aceptar la solicitud." << endl;
+            }
+
+            cout << "Iteraciones realizadas: "<< iteraciones << endl;
+
+            break;
+        }
+
+        case 4:
+        {
+            string nombre;
+            int K;
+            long long iteraciones = 0;
+
+            cout << "Ingrese el nombre del usuario: ";
+            cin >> nombre;
+
+            int indice = sistema.buscarIndiceUsuario(nombre, iteraciones );
+
+            if (indice == -1)
+            {
+                cout << "El usuario no existe." << endl;
+                break;
+            }
+
+            cout << "Cuantas sugerencias desea ver (1 a 20): ";
+            cin >> K;
+
+            if (K < 1 || K > 20)
+            {
+                cout << "La cantidad debe estar entre 1 y 20." << endl;
+                break;
+            }
+
+            cout << "\n--- SUGERENCIAS DE AMISTAD ---" << endl;
+
+            sistema.sugerirAmistades(indice, K, iteraciones);
+
+            cout << "Iteraciones realizadas: "
+                 << iteraciones << endl;
+
+            break;
+        }
+
+        case 0:
+            cout << "Saliendo de Ude@Book..." << endl;
+            break;
+
+        default:
+            cout << "Opcion no valida." << endl;
+            break;
+        }
+
+
+    } while (opcion != 0);
 
 
     return 0;

@@ -112,6 +112,21 @@ int SistemaUdeBook::buscarIndiceUsuario(std::string nombreBuscado)
     return -1;
 }
 
+int SistemaUdeBook::buscarIndiceUsuario(std::string nombreBuscado,long long &iteraciones)
+{
+    for (int i = 0; i < cantidadUsuarios; i++)
+    {
+        iteraciones++;
+
+        if (usuarios[i]->getNombreUsuario() == nombreBuscado)
+        {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
 void SistemaUdeBook::hacerAmigosPorNombre(std::string nombre1, std::string nombre2)
 {
     int i = buscarIndiceUsuario(nombre1);
@@ -227,18 +242,19 @@ int SistemaUdeBook::contarAmigosEnComun(int i, int j, long long &iteraciones)
 }
 
 
+
 long long SistemaUdeBook::calcularMemoriaEstructural()
 {
     long long memoria = 0;
 
-    // Arreglo dinámico de punteros a Usuario
     memoria += capacidadUsuarios * sizeof(Usuario*);
 
-    // Arreglo de punteros a las filas de la matriz
     memoria += tamanoMatriz * sizeof(bool*);
-
-    // Contenido de todas las filas de la matriz
     memoria += tamanoMatriz * tamanoMatriz * sizeof(bool);
+
+    memoria += capacidadSolicitudes * sizeof(SolicitudAmistad*);
+
+    memoria += cantidadSolicitudes * sizeof(SolicitudAmistad);
 
     return memoria;
 }
@@ -289,10 +305,10 @@ Usuario* SistemaUdeBook::getUsuarioPorIndice(int indice)
     return nullptr;
 }
 
-bool SistemaUdeBook::enviarSolicitud( std::string emisor, std::string receptor)
+bool SistemaUdeBook::enviarSolicitud(std::string emisor,std::string receptor,long long &iteraciones)
 {
-    int i = buscarIndiceUsuario(emisor);
-    int j = buscarIndiceUsuario(receptor);
+    int i = buscarIndiceUsuario(emisor, iteraciones);
+    int j = buscarIndiceUsuario(receptor, iteraciones);
 
     if (i == -1 || j == -1 || i == j)
     {
@@ -306,6 +322,7 @@ bool SistemaUdeBook::enviarSolicitud( std::string emisor, std::string receptor)
 
     for (int k = 0; k < cantidadSolicitudes; k++)
     {
+        iteraciones++;
         if (solicitudes[k]->getEstado() == "pendiente")
         {
             if ((solicitudes[k]->getEmisor() == emisor &&solicitudes[k]->getReceptor() == receptor) ||(solicitudes[k]->getEmisor() == receptor &&solicitudes[k]->getReceptor() == emisor))
@@ -329,6 +346,7 @@ bool SistemaUdeBook::enviarSolicitud( std::string emisor, std::string receptor)
 
         for (int k = 0; k < cantidadSolicitudes; k++)
         {
+            iteraciones++;
             nuevasSolicitudes[k] = solicitudes[k];
         }
 
@@ -374,10 +392,10 @@ void SistemaUdeBook::mostrarSolicitudesPendientes(std::string receptor)
     }
 }
 
-bool SistemaUdeBook::aceptarSolicitud(std::string receptor,std::string emisor)
+bool SistemaUdeBook::aceptarSolicitud(std::string receptor,std::string emisor,long long &iteraciones)
 {
-    int i = buscarIndiceUsuario(receptor);
-    int j = buscarIndiceUsuario(emisor);
+    int i = buscarIndiceUsuario(receptor, iteraciones);
+    int j = buscarIndiceUsuario(emisor, iteraciones);
 
     if (i == -1 || j == -1 || i == j)
     {
@@ -386,6 +404,7 @@ bool SistemaUdeBook::aceptarSolicitud(std::string receptor,std::string emisor)
 
     for (int k = 0; k < cantidadSolicitudes; k++)
     {
+        iteraciones++;
         if (solicitudes[k]->getReceptor() == receptor &&solicitudes[k]->getEmisor() == emisor &&solicitudes[k]->getEstado() == "pendiente")
         {
             if (sonAmigos(i, j))
@@ -402,6 +421,21 @@ bool SistemaUdeBook::aceptarSolicitud(std::string receptor,std::string emisor)
     }
 
     return false;
+}
+
+bool SistemaUdeBook::aceptarSolicitud(std::string receptor,std::string emisor)
+{
+    long long iteraciones = 0;
+
+    return aceptarSolicitud(receptor, emisor, iteraciones);
+}
+
+
+bool SistemaUdeBook::enviarSolicitud(std::string emisor,std::string receptor)
+{
+    long long iteraciones = 0;
+
+    return enviarSolicitud(emisor, receptor, iteraciones);
 }
 
 
