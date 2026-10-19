@@ -41,6 +41,52 @@ void SistemaUdeBook::agregarUsuario(Usuario* usuarioNuevo)
     cantidadUsuarios++;
 }
 
+void SistemaUdeBook::crearMatrizAmistad(int tamano)
+{
+    matrizAmistad = new bool*[tamano];
+
+    for (int i = 0; i < tamano; i++)
+    {
+        matrizAmistad[i] = new bool[tamano];
+
+        for (int j = 0; j < tamano; j++)
+        {
+            matrizAmistad[i][j] = false;
+        }
+    }
+
+    tamanoMatriz = tamano;
+}
+
+
+void SistemaUdeBook::hacerAmigos(int i, int j)
+{
+    if (i >= 0 && i < tamanoMatriz &&j >= 0 && j < tamanoMatriz &&i != j)
+    {
+        matrizAmistad[i][j] = true;
+        matrizAmistad[j][i] = true;
+    }
+}
+
+
+int SistemaUdeBook::contarAmigosEnComun(int i, int j, long long &iteraciones)
+{
+    int contador = 0;
+
+    for (int k = 0; k < cantidadUsuarios; k++)
+    {
+        iteraciones++;
+
+        if (matrizAmistad[i][k] && matrizAmistad[j][k])
+        {
+            contador++;
+        }
+    }
+
+    return contador;
+}
+
+
 int SistemaUdeBook::getCantidadUsuarios()
 {
     return cantidadUsuarios;
@@ -60,33 +106,6 @@ Usuario* SistemaUdeBook::buscarUsuario(std::string nombreBuscado)
 }
 
 
-void SistemaUdeBook::crearMatrizAmistad(int tamano)
-{
-    matrizAmistad = new bool*[tamano];
-
-    for (int i = 0; i < tamano; i++)
-    {
-        matrizAmistad[i] = new bool[tamano];
-
-        for (int j = 0; j < tamano; j++)
-        {
-            matrizAmistad[i][j] = false;
-        }
-    }
-
-    tamanoMatriz = tamano;
-}
-
-void SistemaUdeBook::hacerAmigos(int i, int j)
-{
-    if (i >= 0 && i < tamanoMatriz &&
-        j >= 0 && j < tamanoMatriz &&
-        i != j)
-    {
-        matrizAmistad[i][j] = true;
-        matrizAmistad[j][i] = true;
-    }
-}
 
 bool SistemaUdeBook::sonAmigos(int i, int j)
 {
@@ -224,29 +243,12 @@ void SistemaUdeBook::sugerirAmistades(int indiceUsuario,int K,long long &iteraci
     delete[] coincidencias;
 }
 
-int SistemaUdeBook::contarAmigosEnComun(int i, int j, long long &iteraciones)
-{
-    int contador = 0;
-
-    for (int k = 0; k < cantidadUsuarios; k++)
-    {
-        iteraciones++;
-
-        if (matrizAmistad[i][k] && matrizAmistad[j][k])
-        {
-            contador++;
-        }
-    }
-
-    return contador;
-}
 
 
 
 long long SistemaUdeBook::calcularMemoriaEstructural()
 {
-    long long memoria = 0;
-
+    long long memoria = sizeof(SistemaUdeBook);
     memoria += capacidadUsuarios * sizeof(Usuario*);
 
     memoria += tamanoMatriz * sizeof(bool*);
